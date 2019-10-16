@@ -8,9 +8,6 @@ type PO interface {
 
 var x PO
 
-func Setup() {
-
-}
 func SetPo(po PO) {
 	x = po
 	x.Init()

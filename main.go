@@ -5,6 +5,7 @@ import (
 	"github.com/klec/demo/pkg/log"
 	"github.com/klec/demo/po"
 	"github.com/klec/demo/po/db"
+	"github.com/klec/demo/study"
 )
 
 func main() {
@@ -12,21 +13,7 @@ func main() {
 
 	po.SetPo(db.NewXormPo())
 
-	me := model.Person{Name: "Allen", Phone: "18758270725"}
-	if err := po.GetPo().Add(me); err != nil {
-		log.Error("Add me failed error:%s", err)
-	}
+	model.Demo()
 
-	me = model.Person{Name: "Chenzy", Phone: "18758270725"}
-	if err := po.GetPo().Add(me); err != nil {
-		log.Error("Add me failed error:%s", err)
-	}
-
-	input := model.Person{Name: "Allen"}
-	if want, err := po.GetPo().Get(&input); err != nil || want == nil {
-		log.Error("Get person for name:%s error:%s", input.Name, err)
-	} else {
-		log.Info("Get %+v", want)
-	}
-
+	study.InterfaceDemo()
 }
