@@ -27,6 +27,7 @@ func TestDaq(t *testing.T) {
 
 	po.SetPo(m)
 	got, err := Daq(prps)
+
 	assert.Equal(t, err, nil)
 	assert.Equal(t, got, want)
 }
@@ -35,10 +36,11 @@ func TestPoGetFailure(t *testing.T) {
 	m := newMockPo()
 
 	m.On("Init").Return()
-	m.On("Get", nil).Return(nil, errors.New("error"))
+	m.On("Get", nil).Return(nil, errors.New("no table exist"))
 
 	po.SetPo(m)
 	e, err := po.GetPo().Get(nil)
+
 	assert.NotEmpty(t, err)
 	assert.Empty(t, e)
 }
