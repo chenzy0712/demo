@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/klec/demo/po"
-	"github.com/klec/demo/po/mocks"
+	"github.com/klec/demo/internal/po"
+	"github.com/klec/demo/internal/po/mocks"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"

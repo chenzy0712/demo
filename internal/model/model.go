@@ -1,8 +1,8 @@
 package model
 
 import (
+	"github.com/klec/demo/internal/po"
 	"github.com/klec/demo/pkg/log"
-	"github.com/klec/demo/po"
 )
 
 type Person struct {
