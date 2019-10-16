@@ -13,16 +13,16 @@ type UDP interface {
 type UDPStruct struct {
 }
 
-func (u *UDPStruct) Send() {
-	log.Info("Hello, UDP Send()")
-}
+//func (u *UDPStruct) Send() {
+//	log.Info("Hello, UDP Send()")
+//}
 
 func (u *UDPStruct) BoardCast() {
 	log.Info("Hello, UDP BoardCast()")
 }
 
 type NETStruct struct {
-	u UDPStruct
+	UDPStruct
 }
 
 func (n *NETStruct) Send() {
@@ -36,13 +36,11 @@ func InterfaceDemo() {
 	)
 
 	net = &NETStruct{}
-	net.u.BoardCast()
-	net.u.Send()
+	net.BoardCast()
 	net.Send()
 
 	tcp = net
 	tcp.Send()
-
 	//since set net to tcp, the method of BoardCast has been discarded
 	//tcp.BoardCast()
 }
