@@ -18,6 +18,9 @@ type DaqTestSuite struct {
 
 func (daq *DaqTestSuite) SetupSuite() {
 	daq.m = newMockPo()
+
+	daq.m.On("Init")
+	po.SetPo(daq.m)
 }
 
 func (daq *DaqTestSuite) TearDownSuite() {
@@ -27,10 +30,8 @@ func (daq *DaqTestSuite) SetupTest() {
 }
 
 func (daq *DaqTestSuite) TestPoGetFailure() {
-	daq.m.On("Init").Return()
 	daq.m.On("Get", nil).Return(nil, errors.New("no table exist"))
 
-	po.SetPo(daq.m)
 	e, err := po.GetPo().Get(nil)
 
 	assert.NotEmpty(daq.T(), err)
@@ -42,11 +43,9 @@ func (daq *DaqTestSuite) TestDaq() {
 	query := Prps{Period: 1, Phase: 0, Amplitude: 0}
 	want := Prps{Period: 2, Phase: 3.8, Amplitude: 15.34}
 
-	daq.m.On("Init").Return()
 	daq.m.On("Add", prps).Return(nil)
 	daq.m.On("Get", &query).Return(prps, nil)
 
-	po.SetPo(daq.m)
 	got, err := Daq(prps)
 
 	assert.Equal(daq.T(), err, nil)
