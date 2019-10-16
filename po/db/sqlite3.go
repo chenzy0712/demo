@@ -3,26 +3,20 @@ package db
 import (
 	"reflect"
 
-	_ "github.com/DATA-DOG/go-sqlmock"
 	"github.com/klec/demo/model"
 	"github.com/klec/demo/pkg/log"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/klec/demo/po"
 
 	"github.com/go-xorm/xorm"
+	_ "github.com/mattn/go-sqlite3"
 )
-
-type DB interface {
-	Init()
-	Add(interface{}) error
-	Get(data interface{}) (interface{}, error)
-}
 
 type XDatabase struct {
 	x *xorm.Engine
 }
 
 //NewXormPo create PO with xorm
-func NewXormPo() *XDatabase {
+func NewXormPo() po.PO {
 	return &XDatabase{}
 }
 
