@@ -9,6 +9,12 @@ app:
 cross:
 	env GO111MODULE=on CC=arm-mac-gnueabihf-gcc CXX=arm-mac-gnueabihf-g++ CGO_ENABLED=1 GOOS=linux GOARCH=arm go build -ldflags "$(LDFLAGS)" -o ./swem
 
+test:
+	mockery -dir=po -name=PO -output=po/mocks
+	go test -v ./serv
+#	follow command will run all subdirectory test even those do not contain ant test, but output ? xxxxx [no test files]
+#	go test -v ./...
+
 version:
 	rm -f $(VERSIONFILE)
 	@echo "package setting" > $(VERSIONFILE)
@@ -20,3 +26,4 @@ version:
 
 clean:
 	rm -rf demo demo.db
+	rm -rf po/mocks
