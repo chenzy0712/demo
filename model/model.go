@@ -7,16 +7,16 @@ import (
 
 type Person struct {
 	Name  string
-	Phone string
+	Email string
 }
 
 func Demo() {
-	me := Person{Name: "Allen", Phone: "18758270725"}
+	me := Person{Name: "Allen", Email: "hello@gmail.com"}
 	if err := po.GetPo().Add(me); err != nil {
 		log.Error("Add me failed error:%s", err)
 	}
 
-	me = Person{Name: "Chenzy", Phone: "18758270725"}
+	me = Person{Name: "Steve", Email: "hello@gmail.com"}
 	if err := po.GetPo().Add(me); err != nil {
 		log.Error("Add me failed error:%s", err)
 	}
