@@ -14,7 +14,7 @@ import (
 type DB interface {
 	Init()
 	Add(interface{}) error
-	Get() (interface{}, error)
+	Get(data interface{}) (interface{}, error)
 }
 
 type XDatabase struct {
@@ -36,6 +36,7 @@ func (e *XDatabase) Init() {
 
 	//init tables
 	_ = e.x.Sync2(model.Person{})
+
 }
 
 func (e *XDatabase) Add(data interface{}) error {

@@ -3,6 +3,8 @@
 
 # Project
 demo
+mocks
+
 *.db
 *.log
 
