@@ -1,19 +1,26 @@
 package main
 
 import (
-	"github.com/klec/demo/internal/model"
-	"github.com/klec/demo/internal/po"
-	"github.com/klec/demo/internal/po/db"
+	"os"
+
+	"github.com/klec/demo/cmd"
 	"github.com/klec/demo/pkg/log"
-	"github.com/klec/demo/study"
+	"github.com/urfave/cli"
 )
 
 func main() {
+	app := cli.NewApp()
+	//app.Name = setting.AppName
+	//app.Version = setting.AppVer
+	app.Usage = "Golang demo"
+
+	app.Commands = []cli.Command{
+		cmd.UT,
+	}
+
 	log.Info("Hello demo!")
-
-	po.SetPo(db.NewXormPo())
-
-	model.Demo()
-
-	study.InterfaceDemo()
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Error("%s", err)
+	}
 }
