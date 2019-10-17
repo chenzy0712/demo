@@ -1,12 +1,14 @@
+APP_NAME := demo
+APP_VERSION := 0.0.1
 BUILD_DATE := `date +%Y-%m-%d\ %H:%M`
 GIT_VERSION := `git --no-pager describe --tags --dirty --always`
 VERSIONFILE := pkg/setting/version.go
 PACK_DATE := `date +%Y%m%d%H%M`
 
-app:
+app: version
 	env GO111MODULE=on CGO_ENABLED=1 go build
 
-cross:
+cross: version
 	env GO111MODULE=on CC=arm-mac-gnueabihf-gcc CXX=arm-mac-gnueabihf-g++ CGO_ENABLED=1 GOOS=linux GOARCH=arm go build -ldflags "$(LDFLAGS)" -o ./swem
 
 test:
@@ -16,12 +18,15 @@ test:
 #	go test -v ./...
 
 version:
-	rm -f $(VERSIONFILE)
-	@echo "package setting" > $(VERSIONFILE)
+	rm -rf $(VERSIONFILE)
+	@echo "package setting\\n" > $(VERSIONFILE)
 	@echo "const (" >> $(VERSIONFILE)
-	@echo "  GitVersion = \"$(GIT_VERSION)\"" >> $(VERSIONFILE)
-	@echo "  AppBuildTime = \"$(BUILD_DATE)\"" >> $(VERSIONFILE)
-	@echo "  AppBuilder = \"$(USER)\"" >> $(VERSIONFILE)
+	@echo "	AppName = \"$(APP_NAME)\"" >> $(VERSIONFILE)
+	@echo "	AppVersion = \"$(APP_VERSION)\"" >> $(VERSIONFILE)
+	@echo "	AppVer = \"v$(APP_VERSION) $(GIT_VERSION). Built by $(USER) at $(BUILD_DATE)\"" >> $(VERSIONFILE)
+	@echo "	GitVersion = \"$(GIT_VERSION)\"" >> $(VERSIONFILE)
+	@echo "	AppBuildTime = \"$(BUILD_DATE)\"" >> $(VERSIONFILE)
+	@echo "	AppBuilder = \"$(USER)\"" >> $(VERSIONFILE)
 	@echo ")" >> $(VERSIONFILE)
 
 clean:
