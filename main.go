@@ -17,8 +17,10 @@ func main() {
 
 	app.Commands = []cli.Command{
 		cmd.UT,
+		cmd.UDP,
 	}
 
+	log.InitLog("console", "", "info", 10)
 	log.Info("Hello demo!")
 	err := app.Run(os.Args)
 	if err != nil {

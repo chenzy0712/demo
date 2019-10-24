@@ -1,16 +1,9 @@
 package study
 
 import (
-	"encoding/json"
-	"io"
-	"net/http"
+	"sync/atomic"
 
 	"github.com/klec/demo/pkg/log"
-)
-
-var (
-	MaxWorker       = 4
-	MaxLength int64 = 1400
 )
 
 type PayloadCollection struct {
@@ -21,39 +14,29 @@ type PayloadCollection struct {
 
 type Payload struct {
 	// [redacted]
+	firstByte byte
 }
 
-func (p *Payload) UploadToS3() error {
+func (p *Payload) recordSinglePieceOfWave() error {
 	//DO WHAT YOU NEED
+	log.Debug("%02x", p.firstByte)
 	return nil
 }
 
 //payloadHandler handle payload
-func payloadHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+func payloadHandler(data []byte) {
+	var payload Payload
 
-	// Read the body into a string for json decoding
-	var content = &PayloadCollection{}
-	err := json.NewDecoder(io.LimitReader(r.Body, MaxLength)).Decode(&content)
-	if err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	payload.firstByte = data[0]
+	log.Debug("%02x", payload.firstByte)
+	// let's create a job with the payload
+	work := Job{Payload: payload}
 
-	// Go through each payload and queue items individually to be posted to S3
-	for _, payload := range content.Payloads {
-		// let's create a job with the payload
-		work := Job{Payload: payload}
+	atomic.AddUint64(&pps, 1)
 
-		// Push the work onto the queue.
-		JobQueue <- work
-	}
-
-	w.WriteHeader(http.StatusOK)
+	// Push the work onto the queue.
+	JobQueue <- work
+	log.Debug("payloadHandler done")
 }
 
 // Job represents the job to be run
@@ -82,6 +65,7 @@ func NewWorker(workerPool chan chan Job) Worker {
 // case we need to stop it
 func (w Worker) Start() {
 	go func() {
+		log.Info("Run worker")
 		for {
 			// register the current worker into the worker queue.
 			w.WorkerPool <- w.JobChannel
@@ -89,8 +73,8 @@ func (w Worker) Start() {
 			select {
 			case job := <-w.JobChannel:
 				// we have received a work request.
-				if err := job.Payload.UploadToS3(); err != nil {
-					log.Error("Error uploading to S3: %s", err.Error())
+				if err := job.Payload.recordSinglePieceOfWave(); err != nil {
+					log.Error("Error record single piece of wave: %s", err.Error())
 				}
 
 			case <-w.quit:
@@ -123,6 +107,7 @@ func NewDispatcher(maxWorkers int) *Dispatcher {
 func (d *Dispatcher) Run() {
 	// starting n number of workers
 	for i := 0; i < d.maxWorkers; i++ {
+		log.Info("Init %d worker", i)
 		worker := NewWorker(d.WorkerPool)
 		worker.Start()
 	}
@@ -131,6 +116,7 @@ func (d *Dispatcher) Run() {
 }
 
 func (d *Dispatcher) dispatch() {
+	log.Info("Start dispatch")
 	for {
 		select {
 		case job := <-JobQueue:
@@ -147,8 +133,9 @@ func (d *Dispatcher) dispatch() {
 	}
 }
 
-//routineDemo routine demo
-func routineDemo() {
-	dispatcher := NewDispatcher(MaxWorker)
+//RoutineDemo routine demo for handling 1 million request per minute
+func RoutineDemo(workers int) {
+	JobQueue = make(chan Job)
+	dispatcher := NewDispatcher(workers)
 	dispatcher.Run()
 }
