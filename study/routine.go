@@ -65,7 +65,7 @@ func NewWorker(workerPool chan chan Job) Worker {
 // case we need to stop it
 func (w Worker) Start() {
 	go func() {
-		log.Info("Run worker")
+		log.Debug("Run worker")
 		for {
 			// register the current worker into the worker queue.
 			w.WorkerPool <- w.JobChannel
@@ -107,7 +107,7 @@ func NewDispatcher(maxWorkers int) *Dispatcher {
 func (d *Dispatcher) Run() {
 	// starting n number of workers
 	for i := 0; i < d.maxWorkers; i++ {
-		log.Info("Init %d worker", i)
+		log.Debug("Init %d worker", i)
 		worker := NewWorker(d.WorkerPool)
 		worker.Start()
 	}

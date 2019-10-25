@@ -1,7 +1,10 @@
 package study
 
 import (
+	"math"
 	"net"
+	"os"
+	"os/signal"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -10,7 +13,7 @@ import (
 )
 
 const (
-	UDPPacketLen = 1400
+	UDPPacketLen = 1300
 )
 
 var (
@@ -18,6 +21,7 @@ var (
 	wg         sync.WaitGroup
 	total      uint64
 	pps        uint64
+	doIt       int32
 )
 
 //UDPServer receive UDP data and send to handler
@@ -53,18 +57,63 @@ func receive(conn net.PacketConn) {
 			break
 		}
 
-		//log.Debug("n:%d", n)
 		payloadHandler(data[:n])
 		bufferPool.Put(data)
 	}
 }
 
 func statistics() {
-	flushTicker := time.NewTicker(time.Duration(5) * time.Second)
-	for range flushTicker.C {
-		// log.Printf("Ops/s %f", float64(ops)/flushInterval.Seconds())
+	go signalHandler()
+
+	//flushTicker := time.NewTicker(time.Duration(10) * time.Second)
+	//for range flushTicker.C {
+	//	// log.Printf("Ops/s %f", float64(ops)/flushInterval.Seconds())
+	//	atomic.AddUint64(&total, pps)
+	//	log.Info("total:%d, pp5s:%d", atomic.LoadUint64(&total), atomic.LoadUint64(&pps))
+	//	atomic.StoreUint64(&pps, 0)
+	//}
+}
+
+func signalHandler() {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt)
+
+	for range c {
+		atomic.StoreInt32(&doIt, 0)
 		atomic.AddUint64(&total, pps)
-		log.Info("total:%d, pp5s:%d", total, pps)
-		atomic.StoreUint64(&pps, 0)
+		time.Sleep(5 * time.Second)
+		log.Info("total:%d, pp5s:%d", atomic.LoadUint64(&total), atomic.LoadUint64(&pps))
+		wg.Done()
 	}
+}
+
+func UDPClient(addr string, interval int) {
+	conn, err := net.Dial("udp", addr)
+	if err != nil {
+		log.Info("Try to connect addr:%s error:%s, exit now!", addr, err)
+		return
+	}
+	defer conn.Close()
+
+	wg.Add(1)
+	mockSinData := make([]byte, UDPPacketLen)
+	mockCosData := make([]byte, UDPPacketLen)
+	for i := 0; i < len(mockSinData); i++ {
+		mockSinData[i] = byte(math.Sin(1.8 * float64(i)))
+		mockCosData[i] = byte(math.Cos(1.8 * float64(i)))
+	}
+
+	go statistics()
+	atomic.StoreInt32(&doIt, 1)
+
+	for atomic.LoadInt32(&doIt) == 1 {
+		_, err := conn.Write(mockSinData)
+		if err != nil {
+			log.Error("Try to write mock data to server error:%s", err)
+		}
+		atomic.AddUint64(&pps, uint64(1))
+		time.Sleep(time.Microsecond * time.Duration(interval))
+	}
+
+	wg.Wait()
 }
