@@ -110,6 +110,7 @@ func UDPClient(addr string, interval int) {
 		_, err := conn.Write(mockSinData)
 		if err != nil {
 			log.Error("Try to write mock data to server error:%s", err)
+			return
 		}
 		atomic.AddUint64(&pps, uint64(1))
 		time.Sleep(time.Microsecond * time.Duration(interval))
