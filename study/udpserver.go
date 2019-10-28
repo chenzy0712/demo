@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -31,6 +32,7 @@ func UDPServer(addr string) {
 		New: func() interface{} { return make([]byte, UDPPacketLen) },
 	}
 
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	conn, err := net.ListenPacket("udp", addr)
 	if err != nil {
 		log.Error("Try to listen addr:%s err:%s", addr, err)
@@ -81,7 +83,7 @@ func signalHandler() {
 	for range c {
 		atomic.StoreInt32(&doIt, 0)
 		atomic.AddUint64(&total, pps)
-		time.Sleep(5 * time.Second)
+		time.Sleep(2 * time.Second)
 		log.Info("total:%d, pp5s:%d", atomic.LoadUint64(&total), atomic.LoadUint64(&pps))
 		wg.Done()
 	}
