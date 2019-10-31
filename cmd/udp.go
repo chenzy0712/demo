@@ -23,7 +23,7 @@ var (
 		Usage:       "demo udp multi",
 		Description: "run demo UDP multicast server",
 		Flags: []cli.Flag{
-			stringFlag("addr, a", "239.255.76.67:9999", "UDP multicast server address"),
+			stringFlag("addr, a", "239.0.0.0:9999", "UDP multicast server address"),
 			intFlag("worker, w", 40, "max workers for data handlers"),
 		},
 		Action: runMulticastServer,
@@ -34,7 +34,7 @@ var (
 		Usage:       "demo udp multic",
 		Description: "run demo UDP multicast client",
 		Flags: []cli.Flag{
-			stringFlag("addr, a", "239.255.76.67:9999", "UDP multicast server address"),
+			stringFlag("addr, a", "239.0.0.0:9999", "UDP multicast server address"),
 			intFlag("interval, i", 1000, "UDP client send data interval, us"),
 		},
 		Action: runMulticastClient,

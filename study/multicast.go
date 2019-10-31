@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	MulticastPacketLen = 1300
+	MulticastPacketLen = 1024
 )
 
 //MulticastServer receive UDP data and send to handler
@@ -67,7 +67,7 @@ func MulticastClient(addr string, interval int) {
 	go statistics()
 	atomic.StoreInt32(&doIt, 1)
 
-	for atomic.LoadInt32(&doIt) == 1 {
+	for atomic.LoadInt32(&doIt) == 1 || atomic.LoadUint64(&pps) < 1000000 {
 		_, err := conn.Write(mockSinData)
 		if err != nil {
 			log.Error("Try to write mock data to server error:%s", err)
