@@ -18,6 +18,7 @@ func main() {
 	app.Commands = []cli.Command{
 		cmd.UT,
 		cmd.UDP,
+		cmd.CRC,
 	}
 
 	log.InitLog("console", "", "info", 10)
