@@ -19,6 +19,9 @@ func main() {
 		cmd.UT,
 		cmd.UDP,
 		cmd.CRC,
+		cmd.TSDB,
+		cmd.Ctx,
+		cmd.Wire,
 	}
 
 	log.InitLog("console", "", "info", 10)
