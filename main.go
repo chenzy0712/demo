@@ -22,6 +22,7 @@ func main() {
 		cmd.TSDB,
 		cmd.Ctx,
 		cmd.Wire,
+		cmd.Linear,
 	}
 
 	log.InitLog("console", "", "info", 10)

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/klec/demo/internal/wire/binding"
 	"github.com/klec/demo/internal/wire/simple"
 	"github.com/urfave/cli"
 )
@@ -12,6 +13,7 @@ var (
 		Description: "run demo wire",
 		Subcommands: []cli.Command{
 			subCmdSimpleWire,
+			subCmdInterfaceWire,
 		},
 	}
 
@@ -21,9 +23,21 @@ var (
 		Description: "simple wire example",
 		Action:      runSimpleWire,
 	}
+
+	subCmdInterfaceWire = cli.Command{
+		Name:        "interface",
+		Usage:       "demo wire interface",
+		Description: "interface wire example",
+		Action:      runInterfaceWire,
+	}
 )
 
 func runSimpleWire(ctx *cli.Context) error {
 	simple.Demo()
+	return nil
+}
+
+func runInterfaceWire(ctx *cli.Context) error {
+	binding.Demo()
 	return nil
 }

@@ -6,7 +6,7 @@ VERSIONFILE := pkg/setting/version.go
 PACK_DATE := `date +%Y%m%d%H%M`
 
 app: version
-	env GO111MODULE=on CGO_ENABLED=0 go build
+	env GO111MODULE=on CGO_ENABLED=1 go build
 
 cross: version
 	env GO111MODULE=on CC=arm-mac-linux-gnueabihf-gcc CXX=arm-mac-linux-gnueabihf-g++ CGO_ENABLED=1 GOOS=linux GOARCH=arm go build -ldflags "$(LDFLAGS)" -o ./demo

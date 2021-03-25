@@ -16,44 +16,31 @@ var (
 		Usage:       "demo context <option>",
 		Description: "run demo of context",
 		Flags:       []cli.Flag{},
-		Action:      runContext,
+		Action:      runContextTest,
 	}
 )
 
-func runContext(c *cli.Context) error {
+func runContextTest(c *cli.Context) error {
 	log.InitLog("console", "", "info", 1)
 
-	//doContext()
+	//callTimeoutCtx()
 
 	//doCancelInDeferForMistakeUsage()
-	//someHandler()
-	timeoutHandler()
-	log.Info("end")
+	//activeDoCtxCancel()
+	passiveCallCancel()
+	log.Info("runContextTest finished")
 	//time.Sleep(10 * time.Second)
 	//log.Info("exit")
 
 	return nil
 }
 
-func doStuff(ctx context.Context) {
-	for {
-		time.Sleep(1 * time.Second)
-		select {
-		case <-ctx.Done():
-			log.Info("done")
-			return
-		default:
-			log.Info("work")
-		}
-	}
-}
-
-func doTimeoutStuff(ctx context.Context) {
+func doDealLineStuff(ctx context.Context) {
 	for {
 		time.Sleep(1 * time.Second)
 
 		if deadline, ok := ctx.Deadline(); ok {
-			log.Info("deadline set")
+			log.Info("deadline had set")
 			if time.Now().After(deadline) {
 				log.Info("%s", ctx.Err().Error())
 				return
@@ -71,18 +58,34 @@ func doTimeoutStuff(ctx context.Context) {
 	}
 }
 
-func timeoutHandler() {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	//ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(5*time.Second))
-	defer cancel()
-	go doStuff(ctx)
-
-	//go doTimeoutStuff(ctx)
-
-	time.Sleep(10 * time.Second)
+func doStuff(ctx context.Context) {
+	for {
+		time.Sleep(1 * time.Second)
+		select {
+		case cc := <-ctx.Done():
+			log.Info("doStuff done %v", cc)
+			return
+		default:
+			log.Info("doStuff work")
+		}
+	}
 }
 
-func someHandler() {
+//passiveCallCancel passive call cancel() for timeout/deadline
+func passiveCallCancel() {
+	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(5*time.Second))
+	defer cancel()
+	//go doStuff(ctx)
+
+	go doDealLineStuff(ctx)
+
+	time.Sleep(10 * time.Second)
+	log.Info("run passiveCallCancel defer")
+}
+
+//activeDoCtxCancel() active call cancel()
+func activeDoCtxCancel() {
 	ctx, cancel := context.WithCancel(context.Background())
 	go doStuff(ctx)
 
@@ -91,6 +94,21 @@ func someHandler() {
 	cancel()
 }
 
+//callTimeoutCtx wait timeout cancel in main routine
+func callTimeoutCtx() {
+	log.Info("start timeout ctx")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	select {
+	case <-ctx.Done():
+		log.Info("timeout ctx done")
+	}
+}
+
+/*
+WaitGroup work with Context
+*/
 func doWgStuff(ctx context.Context, wg sync.WaitGroup) {
 	for {
 		time.Sleep(1 * time.Second)
@@ -103,8 +121,8 @@ func doWgStuff(ctx context.Context, wg sync.WaitGroup) {
 			log.Info("work")
 		}
 	}
-
 }
+
 func doCancelInDeferForMistakeUsage() {
 	var wg sync.WaitGroup
 
@@ -114,15 +132,4 @@ func doCancelInDeferForMistakeUsage() {
 	defer cancel()
 
 	wg.Wait()
-}
-
-func doContext() {
-	log.Info("start ctx")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	select {
-	case <-ctx.Done():
-		log.Info("ctx done")
-	}
 }

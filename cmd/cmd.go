@@ -29,6 +29,14 @@ func intFlag(name string, value int, usage string) cli.IntFlag {
 	}
 }
 
+func floatFlag(name string, value float64, usage string) cli.Float64Flag {
+	return cli.Float64Flag{
+		Name:  name,
+		Value: value,
+		Usage: usage,
+	}
+}
+
 func durationFlag(name string, value time.Duration, usage string) cli.DurationFlag {
 	return cli.DurationFlag{
 		Name:  name,
