@@ -23,6 +23,8 @@ func main() {
 		cmd.Ctx,
 		cmd.Wire,
 		cmd.Linear,
+		cmd.Test,
+		cmd.Http,
 	}
 
 	log.InitLog("console", "", "info", 10)
