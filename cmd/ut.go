@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/klec/demo/internal/model"
-	"github.com/klec/demo/internal/po"
-	"github.com/klec/demo/internal/po/db"
-	"github.com/klec/demo/study"
+	"git.kldmp.com/learning/demo/internal/model"
+	"git.kldmp.com/learning/demo/internal/po"
+	"git.kldmp.com/learning/demo/internal/po/db"
+	"git.kldmp.com/learning/demo/study"
 	"github.com/urfave/cli"
 )
 

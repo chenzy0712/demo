@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/klec/demo/study"
+	"git.kldmp.com/learning/demo/study"
 	"github.com/urfave/cli"
 )
 

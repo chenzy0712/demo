@@ -3,7 +3,7 @@ package cmd
 import (
 	"strconv"
 
-	"github.com/klec/demo/pkg/log"
+	"git.kldmp.com/learning/demo/pkg/log"
 	"github.com/sjwhitworth/golearn/base"
 	"github.com/urfave/cli"
 

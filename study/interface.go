@@ -1,6 +1,6 @@
 package study
 
-import "github.com/klec/demo/pkg/log"
+import "git.kldmp.com/learning/demo/pkg/log"
 
 type TCP interface {
 	Send()

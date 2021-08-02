@@ -10,7 +10,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/klec/demo/pkg/log"
+	"git.kldmp.com/learning/demo/pkg/log"
 )
 
 const (

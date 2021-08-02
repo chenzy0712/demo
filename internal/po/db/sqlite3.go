@@ -3,11 +3,11 @@ package db
 import (
 	"reflect"
 
-	"github.com/klec/demo/internal/model"
-	"github.com/klec/demo/internal/po"
+	"git.kldmp.com/learning/demo/internal/model"
+	"git.kldmp.com/learning/demo/internal/po"
 
+	"git.kldmp.com/learning/demo/pkg/log"
 	"github.com/go-xorm/xorm"
-	"github.com/klec/demo/pkg/log"
 	_ "github.com/mattn/go-sqlite3"
 )
 

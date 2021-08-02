@@ -1,12 +1,12 @@
-package httpclient
+package client
 
 import (
 	"os"
 	"time"
 
+	"git.kldmp.com/learning/demo/pkg/log"
 	"github.com/beego/beego/v2/client/httplib"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/klec/demo/pkg/log"
 )
 
 func ClientDemo() {

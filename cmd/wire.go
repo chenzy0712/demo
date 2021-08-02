@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/klec/demo/internal/wire/binding"
-	"github.com/klec/demo/internal/wire/simple"
+	"git.kldmp.com/learning/demo/internal/wire/binding"
+	"git.kldmp.com/learning/demo/internal/wire/simple"
 	"github.com/urfave/cli"
 )
 

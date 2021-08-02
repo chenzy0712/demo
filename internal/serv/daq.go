@@ -1,7 +1,7 @@
 package serv
 
 import (
-	"github.com/klec/demo/internal/po"
+	"git.kldmp.com/learning/demo/internal/po"
 )
 
 type Prps struct {

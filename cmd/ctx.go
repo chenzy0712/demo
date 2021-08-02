@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/klec/demo/pkg/log"
+	"git.kldmp.com/learning/demo/pkg/log"
 
 	"github.com/urfave/cli"
 )

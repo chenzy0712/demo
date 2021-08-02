@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/klec/demo/pkg/log"
+	"git.kldmp.com/learning/demo/pkg/log"
 )
 
 type Message struct {

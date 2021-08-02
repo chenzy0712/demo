@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/klec/demo/cmd"
-	"github.com/klec/demo/pkg/log"
-	"github.com/klec/demo/pkg/setting"
+	"git.kldmp.com/learning/demo/cmd"
+	"git.kldmp.com/learning/demo/pkg/log"
+	"git.kldmp.com/learning/demo/pkg/setting"
 	"github.com/urfave/cli"
 )
 

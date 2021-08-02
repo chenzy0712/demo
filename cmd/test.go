@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/klec/demo/pkg/log"
+	"git.kldmp.com/learning/demo/pkg/log"
 	"github.com/urfave/cli"
 )
 
@@ -15,14 +15,22 @@ var (
 		Description: "run demo test",
 		Subcommands: []cli.Command{
 			subCmdTest,
+			subCmdLog,
 		},
 	}
 
 	subCmdTest = cli.Command{
 		Name:        "run",
-		Usage:       "demo test <option>",
+		Usage:       "demo test run",
 		Description: "run demo for test",
 		Action:      runTest,
+	}
+
+	subCmdLog = cli.Command{
+		Name:        "log",
+		Usage:       "demo test log",
+		Description: "run demo for log",
+		Action:      runLog,
 	}
 )
 
@@ -93,5 +101,20 @@ func runTest(c *cli.Context) error {
 	}
 	wg.Wait()
 
+	return nil
+}
+
+func runLog(c *cli.Context) error {
+
+	_ = log.NewKLog("console", "", 7, 0)
+
+	//s := fmt.Sprintf("hello %s.\r\n", "world")
+	//fmt.Println(s)
+
+	log.KDebug("hello")
+	log.KInfo("hello")
+	log.KWarn("hello %s", "this")
+	log.KError("hello %s %s", "this", "poor")
+	log.KFatal("hello %s %s %s!", "this", "poor", "world")
 	return nil
 }

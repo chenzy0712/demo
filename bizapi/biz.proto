@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package bizapi;
+
+import "third-party/google/api/annotations.proto";
+option go_package = "git.kldmp.com/learning/demo/bizapi";
+
+service Biz {
+  //获取数据传输协议信息
+  rpc GetDataTransferProtocolList(GetDataTransferProtocolListReq) returns (GetDataTransferProtocolListResp) {
+    option (google.api.http) = {
+      get: "/api/v2/ddmp/protocols/transfer/{ProductKey}"
+    };
+  }
+  //获取数据采集协议信息
+  rpc GetDaqProtocolList(GetDaqProtocolListReq) returns (GetDaqProtocolListResp) {
+    option (google.api.http) = {
+      get: "/api/v2/ddmp/protocols/daq/{ProductKey}"
+    };
+  }
+  //新增网关设备/直连设备
+  rpc CreatePhysicalDevice(CreatePhysicalDeviceReq) returns (Result) {
+    option (google.api.http) = {
+      post: "/api/v2/ddmp/devices/physical"
+      body: "*"
+    };
+  }
+  //新增逻辑设备
+  rpc CreateLogicalDevice(CreateLogicalDeviceReq) returns (Result) {
+    option (google.api.http) = {
+      post: "/api/v2/ddmp/devices/logical"
+      body: "*"
+    };
+  }
+  //新增逻辑设备下的网关子设备
+  rpc CreateSubDeviceWithLogical(CreateSubDeviceWithLogicalReq) returns (Result) {
+    option (google.api.http) = {
+      post: "/api/v2/ddmp/devices/sub_with_logical"
+      body: "*"
+    };
+  }
+  //新增网关子设备
+  rpc CreateSubDevice(CreateSubDeviceReq) returns (Result) {
+    option (google.api.http) = {
+      post: "/api/v2/ddmp/devices/sub"
+      body: "*"
+    };
+  }
+  //删除设备
+  rpc DeleteDevice(DeleteDeviceReq) returns (Result) {
+    option (google.api.http) = {
+      delete: "/api/v2/ddmp/devices"
+    };
+  }
+  //激活设备
+  rpc ActivateDevice(ActivateDeviceReq) returns (Result) {
+    option (google.api.http) = {
+      post: "/api/v2/ddmp/devices/activate"
+      body: "*"
+    };
+  }
+}
+
+message Result{
+  int32 code=1;
+  string msg=2;
+}
+
+message GetDataTransferProtocolListReq{
+  string ProductKey=1;
+}
+
+message GetDataTransferProtocolListResp{
+  repeated Protocol Protocols=1;
+}
+
+message Protocol{
+  string protocolName=1;
+  string protocolVersion=2;
+  string protocolConfig=3; //json string
+}
+
+message GetDaqProtocolListReq{
+  string ProductKey=1;
+}
+
+message GetDaqProtocolListResp{
+  repeated Protocol Protocols=1;
+}
+
+message CreatePhysicalDeviceReq{
+  string productKey=1;
+  string deviceName=2;
+  string desc=3;
+  Protocol Protocol=4;
+}
+
+message CreateLogicalDeviceReq{
+  string productKey=1;
+  string deviceName=2;
+  string desc=3;
+  string gatewayProductKey=4;
+  string gatewayDeviceName=5;
+}
+
+message CreateSubDeviceWithLogicalReq{
+  string productKey=1;
+  string deviceName=2;
+  string desc=3;
+  string gatewayProductKey=4;
+  string gatewayDeviceName=5;
+  string logicalProductKey=6;
+  string logicalDeviceName=7;
+  Protocol Protocol=8;
+}
+
+message CreateSubDeviceReq{
+  string productKey=1;
+  string deviceName=2;
+  string desc=3;
+  string gatewayProductKey=4;
+  string gatewayDeviceName=5;
+  Protocol Protocol=6;
+}
+
+message DeleteDeviceReq{
+  string productKey=1;
+  string deviceName=2;
+}
+
+message ActivateDeviceReq{
+  string productKey=1;
+  string deviceName=2;
+}

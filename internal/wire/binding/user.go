@@ -1,8 +1,8 @@
 package binding
 
 import (
+	"git.kldmp.com/learning/demo/pkg/log"
 	"github.com/google/wire"
-	"github.com/klec/demo/pkg/log"
 )
 
 type User struct {
